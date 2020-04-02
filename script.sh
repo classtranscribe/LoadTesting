@@ -1,16 +1,20 @@
+#!/bin/bash
 i=1
+ip=`curl ifconfig.me`
+trial=0
+echo "My IP:$ip"
 while IFS= read -r line; do
-    echo "Text read from file: $line"
-    echo "https://classtranscribe.ncsa.illinois.edu$line"
+    url="https://classtranscribe.ncsa.illinois.edu$line"
+    echo $url
     logfile=`echo $line|cut -d'-' -f 2`
-    logfile="../logs/$logfile.txt"
+    logfile="../logs/$i.txt"
     echo $logfile
-    curl --limit-rate 660k --output /dev/null "https://classtranscribe.ncsa.illinois.edu$line" -w "%{time_total},%{size_download},%{speed_download}\n" &> $logfile &
+    ./script2.sh  $url $ip $i $trial $logfile &
     echo "Sleeping"
     sleep 3
     echo "Slept $i"
     i=$((i + 1))
-    # if [ $i -eq 3 ]
+    # if [ $i -eq 2 ]
     # then
     #     break
     # fi
